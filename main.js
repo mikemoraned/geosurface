@@ -5,7 +5,7 @@
   console.log("Running");
 
   d3.csv("datamanip/ontime_geohashes.csv", function(csv) {
-    var all, cf, dimensions;
+    var all, cf, dimensions, groups;
     console.log("Loaded csv, number of rows: " + csv.length);
     cf = crossfilter(csv);
     all = cf.groupAll();
@@ -13,16 +13,32 @@
     dimensions = {
       Origin: cf.dimension(function(d) {
         return d.Origin;
+      }),
+      GeoHashPair: cf.dimension(function(d) {
+        return "" + d.Origin_Hash + "," + d.Dest_Hash;
+      }),
+      GeoHashLevel2Pair: cf.dimension(function(d) {
+        return "" + d.Origin_Hash.slice(0, 2) + "->" + d.Dest_Hash.slice(0, 2);
       })
     };
     console.log("Created dimensions");
+    console.log("Creating groups ...");
+    groups = {
+      GeoHashLevel2Pair: dimensions.GeoHashLevel2Pair.group()
+    };
+    console.log("Created groups");
+    dc.pieChart("#geohash-level2-chart").dimension(dimensions.GeoHashLevel2Pair).group(groups.GeoHashLevel2Pair).renderLabel(true);
     dc.dataTable(".dc-data-table").dimension(dimensions.Origin).group(function(d) {
       return d;
     }).columns([
       function(d) {
         return d.Origin;
       }, function(d) {
+        return d.Origin_Hash;
+      }, function(d) {
         return d.Dest;
+      }, function(d) {
+        return d.Dest_Hash;
       }
     ]).sortBy(function(d) {
       return "" + d.Origin + "-" + d.Dest;

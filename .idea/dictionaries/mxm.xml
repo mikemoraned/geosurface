@@ -2,6 +2,7 @@
   <dictionary name="mxm">
     <words>
       <w>dest</w>
+      <w>geohash</w>
       <w>iata</w>
     </words>
   </dictionary>

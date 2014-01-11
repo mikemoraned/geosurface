@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="59ba1328-b435-426a-87fa-afa0838e4e71" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/main.coffee" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.coffee" afterPath="$PROJECT_DIR$/main.coffee" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.js" afterPath="$PROJECT_DIR$/main.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.map" afterPath="$PROJECT_DIR$/main.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/mxm.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/mxm.xml" />
     </list>
     <ignored path="geosurface.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -30,7 +32,7 @@
       <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="4" column="61" selection-start="116" selection-end="116" vertical-scroll-proportion="-2.5" vertical-offset="0" max-vertical-offset="435">
+            <state line="8" column="33" selection-start="148" selection-end="168" vertical-scroll-proportion="-5.0" vertical-offset="0" max-vertical-offset="510">
               <folding />
             </state>
           </provider>
@@ -39,7 +41,7 @@
       <file leaf-file-name="main.coffee" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.coffee">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="42" selection-start="516" selection-end="516" vertical-scroll-proportion="0.34013605" vertical-offset="0" max-vertical-offset="882">
+            <state line="11" column="70" selection-start="424" selection-end="424" vertical-scroll-proportion="0.18707483" vertical-offset="0" max-vertical-offset="882">
               <folding />
             </state>
           </provider>
@@ -345,14 +347,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="61" selection-start="116" selection-end="116" vertical-scroll-proportion="-2.5" vertical-offset="0" max-vertical-offset="435">
+        <state line="8" column="33" selection-start="148" selection-end="168" vertical-scroll-proportion="-5.0" vertical-offset="0" max-vertical-offset="510">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.coffee">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="42" selection-start="516" selection-end="516" vertical-scroll-proportion="0.34013605" vertical-offset="0" max-vertical-offset="882">
+        <state line="11" column="70" selection-start="424" selection-end="424" vertical-scroll-proportion="0.18707483" vertical-offset="0" max-vertical-offset="882">
           <folding />
         </state>
       </provider>
