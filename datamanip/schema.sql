@@ -39,3 +39,8 @@ create table airports (
   lat real,
   long real
 );
+
+create table geohashes (
+  iata varchar(3),
+  hash varchar(10)
+);

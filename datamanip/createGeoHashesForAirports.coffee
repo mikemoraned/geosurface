@@ -1,5 +1,6 @@
 fs = require('fs')
 csv = require('csv')
+geohash = require('ngeohash')
 
 argv = require('optimist').argv
 
@@ -13,11 +14,18 @@ csv()
   escape: '"'
   columns: true
 })
-.to.stream(fs.createWriteStream("#{__dirname}/#{argv.geohashes}"))
-#.transform( (row) =>
-#  row.unshift(row.pop())
-#  row
-#)
+.to.stream(fs.createWriteStream("#{__dirname}/#{argv.geohashes}"), {
+  columns: ['iata','hash']
+})
+.transform( (row) =>
+  lat = parseFloat(row.lat)
+  lon = parseFloat(row.long)
+  hash = geohash.encode(lat,lon)
+  {
+    iata: row.iata
+    hash: hash
+  }
+)
 .on('record', (row,index) =>
   console.log('#'+index+' '+JSON.stringify(row))
 )
