@@ -1,0 +1,1 @@
+node ./createGeoHashesForAirports.js --airports ../../geosurface-data/airports.csv --geohashes geohashes.csv
