@@ -5,19 +5,19 @@
   console.log("Running");
 
   d3.csv("datamanip/ontime_geohashes.csv", function(csv) {
-    var all, cf, dimensions, groups;
+    var GeoHashLevel2PairMinMax, all, colors, dimensions, facts, groupMinMax, groups;
     console.log("Loaded csv, number of rows: " + csv.length);
-    cf = crossfilter(csv);
-    all = cf.groupAll();
+    facts = crossfilter(csv);
+    all = facts.groupAll();
     console.log("Creating dimensions ...");
     dimensions = {
-      Origin: cf.dimension(function(d) {
+      Origin: facts.dimension(function(d) {
         return d.Origin;
       }),
-      GeoHashPair: cf.dimension(function(d) {
+      GeoHashPair: facts.dimension(function(d) {
         return "" + d.Origin_Hash + "," + d.Dest_Hash;
       }),
-      GeoHashLevel2Pair: cf.dimension(function(d) {
+      GeoHashLevel2Pair: facts.dimension(function(d) {
         return "" + d.Origin_Hash.slice(0, 2) + "->" + d.Dest_Hash.slice(0, 2);
       })
     };
@@ -27,7 +27,25 @@
       GeoHashLevel2Pair: dimensions.GeoHashLevel2Pair.group()
     };
     console.log("Created groups");
-    dc.pieChart("#geohash-level2-chart").dimension(dimensions.GeoHashLevel2Pair).group(groups.GeoHashLevel2Pair).renderLabel(true);
+    groupMinMax = function(group) {
+      var pairs, values;
+      values = (function() {
+        var _i, _len, _ref, _results;
+        _ref = group.all();
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          pairs = _ref[_i];
+          _results.push(pairs.value);
+        }
+        return _results;
+      })();
+      return [d3.min(values), d3.max(values)];
+    };
+    GeoHashLevel2PairMinMax = groupMinMax(groups.GeoHashLevel2Pair);
+    colors = d3.scale.linear().domain(GeoHashLevel2PairMinMax).range(['white', 'red']);
+    dc.pieChart("#geohash-level2-chart").dimension(dimensions.GeoHashLevel2Pair).group(groups.GeoHashLevel2Pair).colorCalculator(colors).colorAccessor(function(d) {
+      return d.value;
+    }).renderLabel(true);
     dc.dataTable(".dc-data-table").dimension(dimensions.Origin).group(function(d) {
       return d;
     }).columns([
