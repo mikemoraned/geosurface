@@ -5,7 +5,7 @@
   console.log("Running");
 
   d3.csv("datamanip/ontime_geohashes.csv", function(csv) {
-    var GeoHashLevelRollupPairMinMax, all, colors, dimensions, facts, groupMinMax, groups;
+    var GeoHashLevelRollupPairMinMax, all, colors, destLevel, dimensions, facts, groupMinMax, groups, originLevel, uniqLevels;
     console.log("Loaded csv, number of rows: " + csv.length);
     facts = crossfilter(csv);
     all = facts.groupAll();
@@ -20,6 +20,12 @@
       GeoHashLevelRollupPair: facts.dimension(function(d) {
         return "" + d.Origin_Hash.slice(0, 2) + "->" + d.Dest_Hash.slice(0, 2);
       })
+    };
+    originLevel = function(d) {
+      return d.split("->")[0];
+    };
+    destLevel = function(d) {
+      return d.split("->")[1];
     };
     console.log("Created dimensions");
     console.log("Creating groups ...");
@@ -43,9 +49,23 @@
     };
     GeoHashLevelRollupPairMinMax = groupMinMax(groups.GeoHashLevelRollupPair);
     colors = d3.scale.linear().domain(GeoHashLevelRollupPairMinMax).range(['white', 'red']);
+    uniqLevels = _.uniq(_.map(groups.GeoHashLevelRollupPair.all(), function(d) {
+      return originLevel(d.key);
+    }).concat(_.map(groups.GeoHashLevelRollupPair.all(), function(d) {
+      return destLevel(d.key);
+    })));
     dc.pieChart("#geohash-level2-pie-chart").dimension(dimensions.GeoHashLevelRollupPair).group(groups.GeoHashLevelRollupPair).colorCalculator(colors).colorAccessor(function(d) {
       return d.value;
     }).renderLabel(true);
+    dc.bubbleChart("#geohash-level2-bubble-chart").height(1000).width(1000).dimension(dimensions.GeoHashLevelRollupPair).group(groups.GeoHashLevelRollupPair).colorCalculator(colors).colorAccessor(function(d) {
+      return d.value;
+    }).keyAccessor(function(d) {
+      return originLevel(d.key);
+    }).valueAccessor(function(d) {
+      return destLevel(d.key);
+    }).radiusValueAccessor(function(d) {
+      return d.value;
+    }).x(d3.scale.linear().domain(uniqLevels)).y(d3.scale.linear().domain(uniqLevels)).r(colors);
     dc.dataTable(".dc-data-table").dimension(dimensions.Origin).group(function(d) {
       return d;
     }).columns([
