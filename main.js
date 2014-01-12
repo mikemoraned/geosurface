@@ -5,7 +5,7 @@
   console.log("Running");
 
   d3.csv("datamanip/ontime_geohashes.csv", function(csv) {
-    var GeoHashLevelRollupPairMinMax, all, allPairs, colors, dimensions, facts, groupMinMax, groups, pairs;
+    var GeoHashLevelRollupPairMinMax, all, colors, dimensions, facts, groupMinMax, groups;
     console.log("Loaded csv, number of rows: " + csv.length);
     facts = crossfilter(csv);
     all = facts.groupAll();
@@ -18,7 +18,7 @@
         return "" + d.Origin_Hash + "," + d.Dest_Hash;
       }),
       GeoHashLevelRollupPair: facts.dimension(function(d) {
-        return "" + d.Origin_Hash.slice(0, 1) + "->" + d.Dest_Hash.slice(0, 1);
+        return "" + d.Origin_Hash.slice(0, 2) + "->" + d.Dest_Hash.slice(0, 2);
       })
     };
     console.log("Created dimensions");
@@ -46,22 +46,6 @@
     dc.pieChart("#geohash-level2-pie-chart").dimension(dimensions.GeoHashLevelRollupPair).group(groups.GeoHashLevelRollupPair).colorCalculator(colors).colorAccessor(function(d) {
       return d.value;
     }).renderLabel(true);
-    allPairs = (function() {
-      var _i, _len, _ref, _results;
-      _ref = groups.GeoHashLevelRollupPair.all();
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        pairs = _ref[_i];
-        _results.push(pairs.key);
-      }
-      return _results;
-    })();
-    dc.barChart("#geohash-level2-row-chart").margins({
-      top: 10,
-      right: 50,
-      bottom: 30,
-      left: 80
-    }).width(1000).dimension(dimensions.GeoHashLevelRollupPair).group(groups.GeoHashLevelRollupPair).x(d3.scale.ordinal().domain(allPairs));
     dc.dataTable(".dc-data-table").dimension(dimensions.Origin).group(function(d) {
       return d;
     }).columns([
