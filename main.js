@@ -5,7 +5,7 @@
   console.log("Running");
 
   d3.csv("datamanip/ontime_geohashes.csv", function(csv) {
-    var GeoHashLevel2PairMinMax, all, colors, dimensions, facts, groupMinMax, groups;
+    var GeoHashLevelRollupPairMinMax, all, allPairs, colors, dimensions, facts, groupMinMax, groups, pairs;
     console.log("Loaded csv, number of rows: " + csv.length);
     facts = crossfilter(csv);
     all = facts.groupAll();
@@ -17,14 +17,14 @@
       GeoHashPair: facts.dimension(function(d) {
         return "" + d.Origin_Hash + "," + d.Dest_Hash;
       }),
-      GeoHashLevel2Pair: facts.dimension(function(d) {
-        return "" + d.Origin_Hash.slice(0, 2) + "->" + d.Dest_Hash.slice(0, 2);
+      GeoHashLevelRollupPair: facts.dimension(function(d) {
+        return "" + d.Origin_Hash.slice(0, 1) + "->" + d.Dest_Hash.slice(0, 1);
       })
     };
     console.log("Created dimensions");
     console.log("Creating groups ...");
     groups = {
-      GeoHashLevel2Pair: dimensions.GeoHashLevel2Pair.group()
+      GeoHashLevelRollupPair: dimensions.GeoHashLevelRollupPair.group()
     };
     console.log("Created groups");
     groupMinMax = function(group) {
@@ -41,11 +41,27 @@
       })();
       return [d3.min(values), d3.max(values)];
     };
-    GeoHashLevel2PairMinMax = groupMinMax(groups.GeoHashLevel2Pair);
-    colors = d3.scale.linear().domain(GeoHashLevel2PairMinMax).range(['white', 'red']);
-    dc.pieChart("#geohash-level2-chart").dimension(dimensions.GeoHashLevel2Pair).group(groups.GeoHashLevel2Pair).colorCalculator(colors).colorAccessor(function(d) {
+    GeoHashLevelRollupPairMinMax = groupMinMax(groups.GeoHashLevelRollupPair);
+    colors = d3.scale.linear().domain(GeoHashLevelRollupPairMinMax).range(['white', 'red']);
+    dc.pieChart("#geohash-level2-pie-chart").dimension(dimensions.GeoHashLevelRollupPair).group(groups.GeoHashLevelRollupPair).colorCalculator(colors).colorAccessor(function(d) {
       return d.value;
     }).renderLabel(true);
+    allPairs = (function() {
+      var _i, _len, _ref, _results;
+      _ref = groups.GeoHashLevelRollupPair.all();
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        pairs = _ref[_i];
+        _results.push(pairs.key);
+      }
+      return _results;
+    })();
+    dc.barChart("#geohash-level2-row-chart").margins({
+      top: 10,
+      right: 50,
+      bottom: 30,
+      left: 80
+    }).width(1000).dimension(dimensions.GeoHashLevelRollupPair).group(groups.GeoHashLevelRollupPair).x(d3.scale.ordinal().domain(allPairs));
     dc.dataTable(".dc-data-table").dimension(dimensions.Origin).group(function(d) {
       return d;
     }).columns([
